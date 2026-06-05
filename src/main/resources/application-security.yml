@@ -1,0 +1,43 @@
+
+app:
+  jwt:
+    secret: ${JWT_SECRET:5c6c6d6f6e6b6a6970777574737271706f6e6d6c6b6a6978777574737271706f6e6d6c}
+    expiration-milliseconds: 900000  # 15 minutes
+    refresh-expiration-milliseconds: 604800000  # 7 days
+    
+  security:
+    rate-limit:
+      enabled: true
+      max-requests-per-minute: 100
+    password-policy:
+      min-length: 8
+      require-special: true
+      require-number: true
+      require-uppercase: true
+    pin-policy:
+      min-length: 4
+      max-length: 6
+      max-attempts: 3
+      lock-duration-minutes: 30
+      
+  encryption:
+    algorithm: AES-256-GCM
+    key: ${ENCRYPTION_KEY}
+    
+  session:
+    max-concurrent-sessions: 5
+    idle-timeout-minutes: 30
+    
+  2fa:
+    issuer: InstantPayment
+    totp-period-seconds: 30
+    totp-digits: 6
+    
+  audit:
+    log-all-actions: true
+    retention-days: 365
+    
+  compliance:
+    pci-dss: false  # Set to true for PCI compliance
+    gdpr: true
+    aml: true
