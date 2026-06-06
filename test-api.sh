@@ -43,8 +43,10 @@ LOGIN_RESPONSE=$(curl -s -X POST "${BASE_URL}/api/v1/auth/login" \
 echo $LOGIN_RESPONSE | jq '.'
 ACCESS_TOKEN=$(echo $LOGIN_RESPONSE | jq -r '.accessToken')
 REFRESH_TOKEN=$(echo $LOGIN_RESPONSE | jq -r '.refreshToken')
+WALLET_ID=$(echo $LOGIN_RESPONSE | jq -r '.wallets[0].walletId')
 echo -e "${GREEN}Access Token: ${ACCESS_TOKEN:0:50}...${NC}"
 echo -e "${GREEN}Refresh Token: ${REFRESH_TOKEN:0:50}...${NC}"
+echo -e "${GREEN}Wallet ID: $WALLET_ID${NC}"
 
 # 4. Get Current User Profile
 echo -e "\n${BLUE}4. Get Current User Profile${NC}"
@@ -100,7 +102,7 @@ curl -s -X POST "${BASE_URL}/api/v1/auth/change-password" \
   -H "Content-Type: application/json" \
   -d '{
     "currentPassword": "Test@123456",
-    "newPassword": "NewTest@123456"
+    "newPassword": "Test@123456"
   }' | jq '.'
 
 # 10. Enable 2FA

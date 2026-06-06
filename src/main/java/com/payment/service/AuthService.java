@@ -151,6 +151,16 @@ public class AuthService {
             session.setExpiresAt(LocalDateTime.now().plusHours(24));
             userSessionRepository.save(session);
 
+            List<Wallet> wallets = walletRepository.findByUserId(user.getId());
+            String primaryWalletId = wallets.stream().filter(Wallet::isPrimary).findFirst()
+                    .map(Wallet::getWalletId).orElse(null);
+
+            List<LoginResponse.WalletInfo> walletInfoList = wallets.stream()
+                    .map(wallet -> LoginResponse.WalletInfo.builder().walletId(wallet.getWalletId())
+                            .walletName(wallet.getWalletName()).currency(wallet.getCurrency())
+                            .isPrimary(wallet.isPrimary()).build())
+                    .collect(Collectors.toList());
+
             auditService.logUserAction(user.getId(), "LOGIN",
                     "User logged in from IP: " + httpRequest.getRemoteAddr());
 
@@ -159,7 +169,8 @@ public class AuthService {
                     .userId(user.getId()).fullName(user.getFullName())
                     .phoneNumber(user.getPhoneNumber()).email(user.getEmail())
                     .emailVerified(user.isEmailVerified()).phoneVerified(user.isPhoneVerified())
-                    .twoFactorEnabled(user.isTwoFactorEnabled()).build();
+                    .twoFactorEnabled(user.isTwoFactorEnabled()).primaryWalletId(primaryWalletId)
+                    .wallets(walletInfoList).build();
 
         } catch (Exception e) {
             user.setFailedLoginAttempts(user.getFailedLoginAttempts() + 1);

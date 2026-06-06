@@ -58,7 +58,7 @@ public class DataInitializer implements CommandLineRunner {
 
             // Create merchant wallet
             Wallet merchantWallet = new Wallet();
-            merchantWallet.setWalletId("WLT_MERCHANT001");
+            merchantWallet.setWalletId("WLT_ABCD1234");
             merchantWallet.setUser(user);
             merchantWallet.setWalletName("Merchant Wallet");
             merchantWallet.setBalance(new BigDecimal("5000.00"));
